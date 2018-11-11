@@ -40,7 +40,6 @@ public class Game extends JComponent
                         {
                             momo.feed(e.getX(),e.getY());
                             feeding = false;
-                            System.out.println("here");
                         }
                         else
                         {
