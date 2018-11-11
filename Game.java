@@ -86,6 +86,7 @@ public class Game extends JComponent
             {
                 System.out.println("Threading error");
             }
+            momo.update();
             frame.repaint();
         }
     }
