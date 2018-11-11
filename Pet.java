@@ -1,6 +1,4 @@
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,13 +15,18 @@ public class Pet
 	private double mood;
 	//number stats are decremented by each update;
 	public double decrement = 0.001;
-	final int width = 80;
+	final int width = 93;
 	final int height = 100;
 	
 	final int Kirbywidth = 450;
 	final int Kirbyheight = 450;
-	
+	public BufferedImage[] sad;
+	public BufferedImage[] angry;
+	public BufferedImage[] idle;
+	public BufferedImage[] happy;
 	public BufferedImage currentImage; 
+	private int counter = 0;
+	
 	public Pet(){
 		hunger = 10.0;
 		thirst = 10.0;
@@ -35,12 +38,17 @@ public class Pet
 		} catch (IOException e) {
 			System.out.println("Error loading image");
 		}
-		BufferedImage[] sad = new BufferedImage[3];
+		sad = new BufferedImage[3];
 		for(int i =0; i< 3; i++) {
-			sad[i] = img.getSubimage(1890 +(i*(width)), 1250, width, height);
+			sad[i] = img.getSubimage(1891 +(i*(width)), 1250, width, height);
 		}
 		
-		currentImage = sad[1];
+		angry = new BufferedImage[2];
+		for(int i =0; i< 2; i++) {
+			angry[i] = img.getSubimage(1891 +(i*(width)), 1250 + height, width, height);
+		}
+		
+		currentImage = angry[0];
 		
 		
 		
@@ -55,6 +63,17 @@ public class Pet
 		hunger = hunger - decrement;
 		thirst = thirst - decrement;
 		mood = mood - decrement;
+		updateCurrentImage();
+	}
+	public void updateCurrentImage() {
+		boolean forever = true;
+		counter ++;
+		currentImage = sad[counter];
+		if (counter == 2) {
+				counter = 0;
+			}
+		
+		
 	}
 	
 	//returns stats, if 0.0, momo dies
