@@ -8,12 +8,15 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.Graphics;
 public class Game extends JComponent
 {
+    static boolean feeding = false;
     static int mouseX;
     static int mouseY;
     
     static BufferedImage Background;
 
     static Pet momo = new Pet();
+    static Food food = new Food();
+
     public Game()
     {
         addMouseMotionListener(new MouseMotionAdapter()
@@ -50,5 +53,6 @@ public class Game extends JComponent
     {
         g.drawImage(Background,0,0,null);
         momo.draw(g);
+        food.draw(mouseX,mouseY,feeding,g);
     }
 }
