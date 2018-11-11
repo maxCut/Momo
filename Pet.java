@@ -1,7 +1,11 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -16,7 +20,7 @@ public class Pet
 	//mood range 0.0 - 10.0, if 0, momo dies of being unhappy.
 	private double mood;
 	//number stats are decremented by each update;
-	public double decrement = 0.005;
+	public double decrement = 0.001;
 	final int width = 93;
 	final int height = 100;
 	
@@ -92,8 +96,8 @@ public class Pet
 	//updates the stats every time the game updates called
 	public void update() {
 		if(!isDead) {
-			hunger = hunger - decrement;
-			thirst = thirst - decrement;
+			hunger = hunger - 1.5*decrement;
+			thirst = thirst - 0.5*decrement;
 			mood = mood - decrement;
 			if(hunger <= 0 || thirst <= 0 || mood <= 0) {
 				death();
@@ -102,6 +106,9 @@ public class Pet
 	        }
             mind.update();
 			updateCurrentImage();
+		}
+		else {
+			mind.think("I died :(");
 		}
 	}
 	public void updateCurrentImage() {
@@ -130,21 +137,30 @@ public class Pet
 		}
 		else {
 			Double[] num = { this.hunger, this.thirst, this.mood}; 
-			  
+			
 	        // using Collections.min() to find minimum element 
 	        // using only 1 line. 
             if(this.hunger<5)
-            {
-                mind.think("Im Hungry");
+            {	
+            	if(delay % 1000 == 0) {
+            		isDying();
+            	}
+                mind.think("I'm Hungry");
             }
             if(this.thirst<5)
             {
-                mind.think("Im Thirsty");
+            	if(delay % 1000 == 0) {
+            		isDying();
+            	}
+                mind.think("I'm Thirsty");
 
             }
             if(this.mood<5)
             {
-                mind.think("Im Lonely");
+            	if(delay % 1000 == 0) {
+            		isDying();
+            	}
+                mind.think("I'm Lonely");
             }
 
 	        Double min = Collections.min(Arrays.asList(num)); 
@@ -248,6 +264,20 @@ public class Pet
 	}
 	public void death() {
 		currentImage = dead;
+		String prg = "import sys";
+		BufferedWriter out;
+		try {
+			//String[] cmd = {"python", "text.py"};
+			//Process p = Runtime.getRuntime().exec(cmd);
+			ProcessBuilder builder = new ProcessBuilder("/anaconda3/bin/python", "text.py");
+			builder.redirectOutput(new File("out.txt"));
+			builder.redirectError(new File("out.txt"));
+			Process p = builder.start(); // may throw IOException
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		isDead = true;
 	}
 	public void feedingTime() {
@@ -257,6 +287,21 @@ public class Pet
 	public void drinkingTime() {
 		isFeeding = true;
 		isPlaying = false;
+	}
+	public void isDying() {
+		String prg = "import sys";
+		BufferedWriter out;
+		try {
+			//String[] cmd = {"python", "text.py"};
+			//Process p = Runtime.getRuntime().exec(cmd);
+			ProcessBuilder builder = new ProcessBuilder("/anaconda3/bin/python", "Dying.py");
+			builder.redirectOutput(new File("out.txt"));
+			builder.redirectError(new File("out.txt"));
+			Process p = builder.start(); // may throw IOException
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	
