@@ -2,6 +2,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.imageio.ImageIO;
 
@@ -14,12 +16,13 @@ public class Pet
 	//mood range 0.0 - 10.0, if 0, momo dies of being unhappy.
 	private double mood;
 	//number stats are decremented by each update;
-	public double decrement = 0.001;
+	public double decrement = 0.005;
 	final int width = 93;
 	final int height = 100;
 	
 	final int Kirbywidth = 450;
 	final int Kirbyheight = 450;
+	
 	public BufferedImage[] sad;
 	public BufferedImage[] angry;
 	public BufferedImage[] idle;
@@ -27,8 +30,13 @@ public class Pet
 	public BufferedImage[] eating;
 	public BufferedImage[] jumping;
 	public BufferedImage currentImage; 
+	public BufferedImage dead;
+	
 	private int counter = 0;
 	private int delay = 0;
+	private boolean isFeeding = false;
+	private boolean isPlaying = false;
+	public boolean isDead = false;
 	public Pet(){
 		hunger = 10.0;
 		thirst = 10.0;
@@ -75,9 +83,8 @@ public class Pet
 		jumping[7] = img.getSubimage( -4+7*width, 370, width, height);
 		jumping[8] = img.getSubimage(-2+8*width, 370, width, height);
 		
-		BufferedImage dead = img.getSubimage(675, 825, width +5, height);
-		currentImage = dead;
-		//currentImage = sad[0];
+		dead = img.getSubimage(675, 825, width +5, height);
+		currentImage = happy[0];
 		
 		
 		
@@ -90,59 +97,151 @@ public class Pet
 	}
 	//updates the stats every time the game updates called
 	public void update() {
-		hunger = hunger - decrement;
-		thirst = thirst - decrement;
-		mood = mood - decrement;
-		//updateCurrentImage();
+		if(!isDead) {
+			hunger = hunger - decrement;
+			thirst = thirst - decrement;
+			mood = mood - decrement;
+			if(hunger <= 0 || thirst <= 0 || mood <= 0) {
+				death();
+			}
+			if(delay % 100 == 0) {
+	        	System.out.println("Mood: " + mood + "\nHunger: " + hunger + "\nthirst: " + thirst);
+	        }
+			updateCurrentImage();
+		}
 	}
 	public void updateCurrentImage() {
 		delay++;
-		if(delay % 25 ==0) {
-			currentImage = jumping[counter];
-			counter ++;
-			if (counter == 9) {
-					counter = 0;
+		if(isFeeding == true) {
+			if(delay % 100 == 0) {
+				if (counter >= eating.length) {
+					isFeeding = false;
 				}
+				else {
+					currentImage = eating[counter];
+					counter++;
+				}
+			}
+		}
+		else if(isPlaying == true) {
+			if(delay % 25 ==0) {
+				if (counter >= jumping.length) {
+					isPlaying = false;
+				}
+				else {
+					currentImage = jumping[counter];
+					counter++;
+				}
+			}
+		}
+		else {
+			Double[] num = { this.hunger, this.thirst, this.mood}; 
+			  
+	        // using Collections.min() to find minimum element 
+	        // using only 1 line. 
+	        Double min = Collections.min(Arrays.asList(num)); 
+			if(min > 0.0 && min <= 2.5) {
+				if(delay % 50 ==0) {
+					if (counter >= sad.length) 
+						counter = 0;
+					currentImage = sad[counter];
+					counter++;
+					
+						
+				}
+			}
+			else if(min> 2.5 && min <=5.0) {
+				if(delay % 50 ==0) {
+					if (counter >= angry.length) 
+						counter = 0;
+					currentImage = angry[counter];
+					counter++;
+					
+				}
+			}
+			else if(min>5.0 && min<=7.5) {
+				
+				if(delay % 50 ==0) {
+					if (counter >= idle.length) 
+						counter = 0;
+					currentImage = idle[counter];
+					counter++;
+					
+			}
+			}
+			else if(min <= 0) {
+				currentImage = dead;
+			}
+			else {
+				if(delay % 50 ==0) {
+					if (counter >= happy.length) 
+						counter = 0;
+					currentImage = happy[counter];
+					counter++;
+					
+			}
+			}
+			
 		}
 		
 		
-	}
-	
-	//returns stats, if 0.0, momo dies
-	public double getHunger() {
-		if(hunger == 0.0) {
-			death();
-		}
-		return hunger;
-	}
-	public double getThirst() {
-		if(thirst == 0.0) {
-			death();
-		}
-		return thirst;
-	}
-	public double getMood() {
-		if(mood == 0.0) {
-			death();
-		}
-		return mood;
 	}
 	//Called when user plays with momo, increase's mood
-	public void play() {
+	public void play(int x, int y) {
+		isFeeding = false;
+		isPlaying = true;
 		mood += 1.0;
+		if(mood > 10.0)
+			mood =10;
+		counter = 0;
+		updateCurrentImage();
 	}
 	public void feed(int x, int y) {
-		hunger += 5.0;
+		int Minx = Kirbywidth;
+		int Maxx = Minx + currentImage.getWidth();
+		int Miny = Kirbyheight;
+		int Maxy = Miny + currentImage.getHeight();
+		System.out.println(x + " " + Minx + " " + Maxx);
+		if(x>Minx && x<Maxx && y>Miny && y<Maxy && !isDead) {
+			isFeeding = true;
+			isPlaying = false;
+			hunger += 5.0;
+			if(hunger > 10.0)
+				hunger =10;
+			counter = 0;
+			updateCurrentImage();
+		}
 	}
 	public void water(int x, int y) {
-		thirst += 5.0;
+		int Minx = Kirbywidth;
+		int Maxx = Minx + currentImage.getWidth();
+		int Miny = Kirbyheight;
+		int Maxy = Miny + currentImage.getHeight();
+		System.out.println(x + " " + Minx + " " + Maxx);
+		if(x>Minx && x<Maxx && y>Miny && y<Maxy && !isDead) {
+			isFeeding = true;
+			isPlaying = false;
+			thirst += 5.0;
+			if(thirst > 10.0)
+				thirst =10;
+			counter = 0;
+			updateCurrentImage();
+		}
+		
 	}
 	
 	public void draw(Graphics g) {
 		g.drawImage(currentImage,Kirbywidth,Kirbyheight,null);
 	}
 	public void death() {
-		//Momo ded :(
+		currentImage = dead;
+		isDead = true;
+	}
+	public void feedingTime() {
+		
+	}
+	public void drinkingTime() {
+		
 	}
 
 	
