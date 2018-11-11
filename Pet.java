@@ -51,7 +51,7 @@ public class Pet
 		thirst += 5.0;
 	}
 	
-	public void draws(Graphics g) {
+	public void draw(Graphics g) {
 		
 	}
 	public void death() {
