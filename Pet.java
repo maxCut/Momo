@@ -1,4 +1,6 @@
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
 public class Pet
 {
 	//hunger range 0.0 - 10.0, if 0, momo dies.
@@ -8,11 +10,28 @@ public class Pet
 	//mood range 0.0 - 10.0, if 0, momo dies of being unhappy.
 	private double mood;
 	//number stats are decremented by each update;
-	public double decrement = 0.01;
+	public double decrement = 0.001;
 	public Pet(){
 		hunger = 10.0;
 		thirst = 10.0;
 		mood = 10.0;
+		
+		BufferedImage img = null;
+		try {
+		    img = ImageIO.read(new File("./basic_kirby_sheet__superstar_ultra_style__by_boomerbro6-d4qyeeu.png"));
+		} catch (IOException e) {
+			System.out.println("Error loading image");
+		}
+		
+		BufferedImage currentImage = img;
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	//updates the stats every time the game updates called
 	public void update() {
@@ -52,7 +71,8 @@ public class Pet
 	}
 	
 	public void draw(Graphics g) {
-		
+		g.drawImage(currentImage,50,50,null);
+        momo.draw(g);
 	}
 	public void death() {
 		//Momo ded :(
