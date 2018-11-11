@@ -17,8 +17,12 @@ public class Pet
 	private double mood;
 	//number stats are decremented by each update;
 	public double decrement = 0.001;
-	final int width = 75;
+	final int width = 80;
 	final int height = 100;
+	
+	final int Kirbywidth = 450;
+	final int Kirbyheight = 450;
+	
 	public BufferedImage currentImage; 
 	public Pet(){
 		hunger = 10.0;
@@ -32,7 +36,7 @@ public class Pet
 			System.out.println("Error loading image");
 		}
 		BufferedImage[] happy = new BufferedImage[3];
-		happy[0] = img.getSubimage(1885, 1250, width, height);
+		happy[0] = img.getSubimage(1890, 1250, width, height);
 		currentImage = happy[0];
 		
 		
@@ -76,12 +80,12 @@ public class Pet
 	public void feed(int x, int y) {
 		hunger += 5.0;
 	}
-	public void water() {
+	public void water(int x, int y) {
 		thirst += 5.0;
 	}
 	
 	public void draw(Graphics g) {
-		g.drawImage(currentImage,50,50,null);
+		g.drawImage(currentImage,Kirbywidth,Kirbyheight,null);
 	}
 	public void death() {
 		//Momo ded :(
