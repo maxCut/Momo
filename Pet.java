@@ -35,9 +35,12 @@ public class Pet
 		} catch (IOException e) {
 			System.out.println("Error loading image");
 		}
-		BufferedImage[] happy = new BufferedImage[3];
-		happy[0] = img.getSubimage(1890, 1250, width, height);
-		currentImage = happy[0];
+		BufferedImage[] sad = new BufferedImage[3];
+		for(int i =0; i< 3; i++) {
+			sad[i] = img.getSubimage(1890 +(i*(width)), 1250, width, height);
+		}
+		
+		currentImage = sad[1];
 		
 		
 		
