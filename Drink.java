@@ -7,7 +7,7 @@ public class Drink
 {
     final int width = 60;
     final int height= 60;
-    final int locationX = 600;
+    final int locationX = 770;
     final int locationY = 100;
 
     static BufferedImage DrinkImage;

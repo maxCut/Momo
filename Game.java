@@ -11,6 +11,7 @@ import java.awt.Graphics;
 public class Game extends JComponent
 {
     static boolean feeding = false;
+    static boolean watering = false;
     static int mouseX;
     static int mouseY;
     
@@ -18,6 +19,7 @@ public class Game extends JComponent
 
     static Pet momo = new Pet();
     static Food food = new Food();
+    static Drink drink = new Drink();
 
     public Game()
     {
@@ -44,6 +46,15 @@ public class Game extends JComponent
                         else
                         {
                             feeding = food.isFeeding(e.getX(),e.getY());
+                        }
+                        if(watering && !(drink.isWatering(e.getX(),e.getY())))
+                        {
+                            momo.water(e.getX(),e.getY());
+                            watering = false;
+                        }
+                        else
+                        {
+                            watering = drink.isWatering(e.getX(),e.getY());
                         }
                     }
                 });
@@ -83,5 +94,6 @@ public class Game extends JComponent
         g.drawImage(Background,0,0,null);
         momo.draw(g);
         food.draw(mouseX,mouseY,feeding,g);
+        drink.draw(mouseX,mouseY,watering,g);
     }
 }
