@@ -22,7 +22,7 @@ public class Food
             System.out.println("Error loading image");
         }
     }
-    public boolean IsFeeding(int x,int y)
+    public boolean isFeeding(int x,int y)
     {
         return (x>locationX && x<locationX + width && y>locationY && y<locationY+height);
     }
