@@ -1,4 +1,6 @@
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +17,8 @@ public class Pet
 	private double mood;
 	//number stats are decremented by each update;
 	public double decrement = 0.001;
-	
+	final int width = 75;
+	final int height = 100;
 	public BufferedImage currentImage; 
 	public Pet(){
 		hunger = 10.0;
@@ -28,8 +31,9 @@ public class Pet
 		} catch (IOException e) {
 			System.out.println("Error loading image");
 		}
-		
-		currentImage = img;
+		BufferedImage[] happy = new BufferedImage[3];
+		happy[0] = img.getSubimage(1885, 1250, width, height);
+		currentImage = happy[0];
 		
 		
 		
@@ -82,6 +86,7 @@ public class Pet
 	public void death() {
 		//Momo ded :(
 	}
+
 	
 	
 }
