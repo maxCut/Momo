@@ -17,13 +17,21 @@ class ThoughtBubble
 			System.out.println("Error loading image");
 		}
     }
-    public void updated()
+    public void update()
     {
-
+        if(TimeToIdle>0)
+        {
+            TimeToIdle--;
+        }
     }
     public void think(String s)
     {
-    
+        thought = s;
+        TimeToIdle = 280;
+    }
+    public void blank()
+    {
+        TimeToIdle = 0; 
     }
     public void text(String s)
     {
@@ -31,7 +39,10 @@ class ThoughtBubble
     }
     public void draw(Graphics g, int x, int y)
     {
-        g.drawImage(bubbleImg,x,y,null);
-        g.drawString(thought,x+5,y+5);
+        if(TimeToIdle>0)
+        {
+            g.drawImage(bubbleImg,x-100,y-200,null);
+            g.drawString(thought,x-50,y-100);
+        }
     }
 }

@@ -37,7 +37,9 @@ public class Pet
 	private boolean isFeeding = false;
 	private boolean isPlaying = false;
 	public boolean isDead = false;
+    public ThoughtBubble mind = new ThoughtBubble();
 	public Pet(){
+        mind.think("Hi, I am momo!");
 		hunger = 10.0;
 		thirst = 10.0;
 		mood = 10.0;
@@ -86,14 +88,6 @@ public class Pet
 		dead = img.getSubimage(675, 825, width +5, height);
 		currentImage = happy[0];
 		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	//updates the stats every time the game updates called
 	public void update() {
@@ -105,17 +99,17 @@ public class Pet
 				death();
 			}
 			if(delay % 100 == 0) {
-	        	System.out.println("Mood: " + mood + "\nHunger: " + hunger + "\nthirst: " + thirst);
 	        }
+            mind.update();
 			updateCurrentImage();
 		}
 	}
 	public void updateCurrentImage() {
 		delay++;
 		if(isFeeding == true) {
-			if(delay % 100 == 0) {
+			if(delay % 50 == 0) {
 				if (counter >= eating.length) {
-					isFeeding = false;
+					currentImage = eating[eating.length-1];
 				}
 				else {
 					currentImage = eating[counter];
@@ -139,6 +133,20 @@ public class Pet
 			  
 	        // using Collections.min() to find minimum element 
 	        // using only 1 line. 
+            if(this.hunger<5)
+            {
+                mind.think("Im Hungry");
+            }
+            if(this.thirst<5)
+            {
+                mind.think("Im Thirsty");
+
+            }
+            if(this.mood<5)
+            {
+                mind.think("Im Lonely");
+            }
+
 	        Double min = Collections.min(Arrays.asList(num)); 
 			if(min > 0.0 && min <= 2.5) {
 				if(delay % 50 ==0) {
@@ -188,23 +196,28 @@ public class Pet
 	}
 	//Called when user plays with momo, increase's mood
 	public void play(int x, int y) {
-		isFeeding = false;
-		isPlaying = true;
-		mood += 1.0;
-		if(mood > 10.0)
-			mood =10;
-		counter = 0;
-		updateCurrentImage();
-	}
-	public void feed(int x, int y) {
 		int Minx = Kirbywidth;
 		int Maxx = Minx + currentImage.getWidth();
 		int Miny = Kirbyheight;
 		int Maxy = Miny + currentImage.getHeight();
-		System.out.println(x + " " + Minx + " " + Maxx);
 		if(x>Minx && x<Maxx && y>Miny && y<Maxy && !isDead) {
-			isFeeding = true;
-			isPlaying = false;
+		    isFeeding = false;
+		    isPlaying = true;
+		    mood += 5.0;
+		    if(mood > 10.0)
+			    mood =10;
+		    counter = 0;
+		    updateCurrentImage();
+        }
+	}
+	public void feed(int x, int y) {
+		isFeeding = false;//keep this line here it is not an error
+		int Minx = Kirbywidth;
+		int Maxx = Minx + currentImage.getWidth();
+		int Miny = Kirbyheight;
+		int Maxy = Miny + currentImage.getHeight();
+		if(x>Minx && x<Maxx && y>Miny && y<Maxy && !isDead) {
+            mind.blank();
 			hunger += 5.0;
 			if(hunger > 10.0)
 				hunger =10;
@@ -213,14 +226,13 @@ public class Pet
 		}
 	}
 	public void water(int x, int y) {
+		isFeeding = false;
 		int Minx = Kirbywidth;
 		int Maxx = Minx + currentImage.getWidth();
 		int Miny = Kirbyheight;
 		int Maxy = Miny + currentImage.getHeight();
-		System.out.println(x + " " + Minx + " " + Maxx);
 		if(x>Minx && x<Maxx && y>Miny && y<Maxy && !isDead) {
-			isFeeding = true;
-			isPlaying = false;
+            mind.blank();
 			thirst += 5.0;
 			if(thirst > 10.0)
 				thirst =10;
@@ -232,16 +244,19 @@ public class Pet
 	
 	public void draw(Graphics g) {
 		g.drawImage(currentImage,Kirbywidth,Kirbyheight,null);
+        mind.draw(g,Kirbywidth,Kirbyheight);
 	}
 	public void death() {
 		currentImage = dead;
 		isDead = true;
 	}
 	public void feedingTime() {
-		
+		isFeeding = true;
+		isPlaying = false;
 	}
 	public void drinkingTime() {
-		
+		isFeeding = true;
+		isPlaying = false;
 	}
 
 	

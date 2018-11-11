@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.Graphics;
+import java.awt.Font;
 public class Game extends JComponent
 {
     static boolean feeding = false;
@@ -38,6 +39,10 @@ public class Game extends JComponent
                     {
                         mouseX = e.getX();
                         mouseY = e.getY();
+                        if(!feeding && !watering)
+                        {
+                            momo.play(e.getX(),e.getY());
+                        }
                         if(feeding && !(food.isFeeding(e.getX(),e.getY())))
                         {
                             momo.feed(e.getX(),e.getY());
@@ -56,6 +61,15 @@ public class Game extends JComponent
                         {
                             watering = drink.isWatering(e.getX(),e.getY());
                         }
+                        if(feeding)
+                        {
+                            momo.feedingTime();
+                        }
+                        if(watering)
+                        {
+                            momo.drinkingTime();
+                        }
+                        
                     }
                 });
 
@@ -92,6 +106,9 @@ public class Game extends JComponent
     }
     public void paintComponent(Graphics g)
     {
+        Font currentFont = g.getFont();
+        Font newFont = currentFont.deriveFont(currentFont.getSize() * 2.1F);
+        g.setFont(newFont);
         g.drawImage(Background,0,0,null);
         momo.draw(g);
         food.draw(mouseX,mouseY,feeding,g);
