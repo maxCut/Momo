@@ -20,7 +20,7 @@ public class Pet
 	//mood range 0.0 - 10.0, if 0, momo dies of being unhappy.
 	private double mood;
 	//number stats are decremented by each update;
-	public double decrement = 0.001;
+	public double decrement = 0.0005;
 	final int width = 93;
 	final int height = 100;
 	
@@ -262,6 +262,7 @@ public class Pet
 		g.drawImage(currentImage,Kirbywidth,Kirbyheight,null);
         mind.draw(g,Kirbywidth,Kirbyheight);
 	}
+	//I was running python from anaconda, most people would have to just have to call "python"
 	public void death() {
 		currentImage = dead;
 		String prg = "import sys";
